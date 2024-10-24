@@ -1,0 +1,150 @@
+using System;
+
+internal class Program
+{
+    internal class Ex3 : IComparable<Ex3>
+    {
+        protected int _value1;
+        protected int _value2;
+        protected int _value3;
+
+        public Ex3(int value1, int value2, int value3)
+        {
+            _value1 = value1;
+            _value2 = value2;
+            _value3 = value3;
+        }
+
+        public Ex3(Ex3 other)
+        {
+            _value1 = other._value1;
+            _value2 = other._value2;
+            _value3 = other._value3;
+        }
+
+        public int GetMax()
+        {
+            return Math.Max(_value1, Math.Max(_value2, _value3));
+        }
+
+        public override string ToString()
+        {
+            return $"Первое число: {_value1}\nВторое число: {_value2}\nТретье число: {_value3}";
+        }
+
+        public int CompareTo(Ex3 other)
+        {
+            if (other == null) throw new ArgumentNullException(nameof(other));
+
+            var compareResult = _value1.CompareTo(other._value1);
+            if (compareResult != 0) return compareResult;
+
+            compareResult = _value2.CompareTo(other._value2);
+            if (compareResult != 0) return compareResult;
+
+            return _value3.CompareTo(other._value3);
+        }
+    }
+
+    internal class ExtendedEx3 : Ex3 // Дочерний класс
+    {
+        private int _value4; // Дополнительное поле
+
+        public ExtendedEx3(int value1, int value2, int value3, int value4)
+            : base(value1, value2, value3) // Вызов конструктора базового класса
+        {
+            _value4 = value4;
+        }
+
+        public ExtendedEx3(ExtendedEx3 other) 
+            : base(other) // Вызов конструктора копирования базового класса
+        {
+            _value4 = other._value4; 
+        }
+
+        public int GetSum() // Метод для вычисления суммы всех полей
+        {
+            return _value4 + base.GetMax() + (_value1 + _value2 + _value3); // Получаем доступ к полям базового класса
+        }
+
+        public double GetAverage() // Метод для вычисления среднего значения
+        {
+            return GetSum() / 4.0; // Возвращает среднее значение
+        }
+
+        public override string ToString() // Перегрузка ToString
+        {
+            return base.ToString() + $"\nЧетвертое число: {_value4}"; // Добавляем вывод поля дочернего класса
+        }
+    }
+
+    static void Main(string[] args)
+    {
+        Ex3 ex3 = GetValidInput();
+        Console.WriteLine($"Максимальное значение: {ex3.GetMax()}");
+        Console.WriteLine(ex3);
+        Console.WriteLine($"Сравнение с объектом: {ex3.CompareTo(ex3)}");
+
+        // Тестирование дочернего класса
+        ExtendedEx3 extendedEx3 = new ExtendedEx3(10, 20, 30, 40);
+        Console.WriteLine($"Сумма значений дочернего класса: {extendedEx3.GetSum()}");
+        Console.WriteLine($"Среднее значение дочернего класса: {extendedEx3.GetAverage()}");
+        Console.WriteLine(extendedEx3);
+    }
+
+    static Ex3 GetValidInput()
+    {
+        bool validInput = false;
+        Ex3 ex3 = null;
+
+        while (!validInput)
+        {
+            try
+            {
+                Console.Write("Введите первое число: ");
+                int value1 = GetPositiveInteger();
+                Console.Write("Введите второе число: ");
+                int value2 = GetPositiveInteger();
+                Console.Write("Введите третье число: ");
+                int value3 = GetPositiveInteger();
+                
+                ex3 = new Ex3(value1, value2, value3);
+                validInput = true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Ошибка: {ex.Message}. Пожалуйста, повторите ввод.");
+            }
+        }
+
+        return ex3;
+    }
+
+    static int GetPositiveInteger()
+    {
+        bool isValid = false;
+        int input = 0;
+
+        while (!isValid)
+        {
+            string inputString = Console.ReadLine();
+            if (int.TryParse(inputString, out input))
+            {
+                if (input > 0)
+                {
+                    isValid = true;
+                }
+                else
+                {
+                    Console.WriteLine("Пожалуйста, введите положительное целое число.");
+                }
+            }
+            else
+            {
+                Console.WriteLine("Некорректный ввод. Пожалуйста, введите целое число.");
+            }
+        }
+
+        return input;
+    }
+}
