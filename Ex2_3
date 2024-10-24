@@ -1,0 +1,151 @@
+using System;
+
+internal class Program
+{
+    public class Point
+    {
+        // Поля класса
+        private double _x;
+        private double _y;
+
+        // Конструктор
+        public Point(double x, double y)
+        {
+            _x = x;
+            _y = y;
+        }
+
+        // Свойства
+        public double X
+        {
+            get => _x;
+            set => _x = value;
+        }
+
+        public double Y
+        {
+            get => _y;
+            set => _y = value;
+        }
+
+        // Метод для вычисления расстояния до другой точки
+        public double DistanceTo(Point other)
+        {
+            if (other == null) throw new ArgumentNullException(nameof(other));
+
+            double deltaX = _x - other._x;
+            double deltaY = _y - other._y;
+
+            return Math.Sqrt(deltaX * deltaX + deltaY * deltaY);
+        }
+
+        // Перегрузка ToString для вывода координат
+        public override string ToString()
+        {
+            return $"Точка: (X: {_x}, Y: {_y})";
+        }
+
+        // Унарные операции
+        public static Point operator ++(Point point)
+        {
+            point._x += 1;
+            return point;
+        }
+
+        public static Point operator --(Point point)
+        {
+            point._x -= 1;
+            return point;
+        }
+
+        // Операции приведения типа
+        public static explicit operator int(Point point)
+        {
+            return (int)point._x; // Явное преобразование в int (целая часть X)
+        }
+
+        public static implicit operator double(Point point)
+        {
+            return point._y; // Неявное преобразование в double (координата Y)
+        }
+
+        // Бинарные операции
+        public static double operator +(Point p1, Point p2)
+        {
+            return p1.DistanceTo(p2); // Расстояние до точки p2
+        }
+
+        public static Point operator +(Point point, int value)
+        {
+            point._x += value; // Увеличение координаты x на value
+            return point;
+        }
+
+        public static Point operator +(int value, Point point)
+        {
+            point._x += value; // Увеличение координаты x на value
+            return point;
+        }
+    }
+
+    static void Main(string[] args)
+    {
+        Console.WriteLine("Введите координаты первой точки:");
+        Point point1 = GetValidPoint();
+
+        Console.WriteLine("Введите координаты второй точки:");
+        Point point2 = GetValidPoint();
+
+        // Вычисление расстояния между двумя точками
+        double distance = point1 + point2;
+
+        Console.WriteLine(point1);
+        Console.WriteLine(point2);
+        Console.WriteLine($"Расстояние между точками: {distance}");
+
+        // Тестирование унарных операций
+        Console.WriteLine("Тестирование унарных операций:");
+        point1++;
+        Console.WriteLine($"После ++: {point1}");
+        point1--;
+        Console.WriteLine($"После --: {point1}");
+
+        // Тестирование операций приведения типа
+        int xAsInt = (int)point1; // Явное преобразование
+        double yAsDouble = point1; // Неявное преобразование
+        Console.WriteLine($"X как int: {xAsInt}, Y как double: {yAsDouble}");
+
+        // Тестирование бинарных операций
+        Point point3 = point1 + 5; // Увеличение x на 5
+        Console.WriteLine($"После увеличения x на 5: {point3}");
+    }
+
+    static Point GetValidPoint()
+    {
+        double x = GetValidCoordinate("X");
+        double y = GetValidCoordinate("Y");
+
+        return new Point(x, y);
+    }
+
+    static double GetValidCoordinate(string coordinateName)
+    {
+        double value;
+        bool isValid;
+
+        do
+        {
+            Console.Write($"Введите координату {coordinateName}: ");
+            string input = Console.ReadLine();
+
+            isValid = double.TryParse(input, out value);
+
+            if (!isValid)
+            {
+                Console.WriteLine("Некорректный ввод. Пожалуйста, введите число.");
+            }
+        } while (!isValid);
+
+        return value;
+    }
+}
