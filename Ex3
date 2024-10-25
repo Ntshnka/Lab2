@@ -46,35 +46,33 @@ internal class Program
         }
     }
 
-    internal class ExtendedEx3 : Ex3 // Дочерний класс
+    internal class ExtendedEx3 : Ex3
     {
-        private int _value4; // Дополнительное поле
+        private int _value4;
 
-        public ExtendedEx3(int value1, int value2, int value3, int value4)
-            : base(value1, value2, value3) // Вызов конструктора базового класса
+        public ExtendedEx3(int value1, int value2, int value3, int value4) : base(value1, value2, value3)
         {
             _value4 = value4;
         }
 
-        public ExtendedEx3(ExtendedEx3 other) 
-            : base(other) // Вызов конструктора копирования базового класса
+        public ExtendedEx3(ExtendedEx3 other) : base(other)
         {
-            _value4 = other._value4; 
+            _value4 = other._value4;
         }
 
-        public int GetSum() // Метод для вычисления суммы всех полей
+        public int GetSum()
         {
-            return _value4 + base.GetMax() + (_value1 + _value2 + _value3); // Получаем доступ к полям базового класса
+            return _value1 + _value2 + _value3;
         }
 
-        public double GetAverage() // Метод для вычисления среднего значения
+        public double GetAverage()
         {
-            return GetSum() / 4.0; // Возвращает среднее значение
+            return GetSum() / 4.0;
         }
 
-        public override string ToString() // Перегрузка ToString
+        public override string ToString()
         {
-            return base.ToString() + $"\nЧетвертое число: {_value4}"; // Добавляем вывод поля дочернего класса
+            return base.ToString() + $"\nЧетвертое число: {_value4}";
         }
     }
 
@@ -85,7 +83,6 @@ internal class Program
         Console.WriteLine(ex3);
         Console.WriteLine($"Сравнение с объектом: {ex3.CompareTo(ex3)}");
 
-        // Тестирование дочернего класса
         ExtendedEx3 extendedEx3 = new ExtendedEx3(10, 20, 30, 40);
         Console.WriteLine($"Сумма значений дочернего класса: {extendedEx3.GetSum()}");
         Console.WriteLine($"Среднее значение дочернего класса: {extendedEx3.GetAverage()}");
@@ -130,7 +127,7 @@ internal class Program
             string inputString = Console.ReadLine();
             if (int.TryParse(inputString, out input))
             {
-                if (input > 0)
+                if (input >= 0)
                 {
                     isValid = true;
                 }
